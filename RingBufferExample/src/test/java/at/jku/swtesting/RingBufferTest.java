@@ -7,12 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RingBufferTest {
 
-	@Test
-	public void test() {
-		fail("Not yet implemented");  //TODO: Implement tests
-	}
-
-
 	private RingBuffer<Integer> ringBufferInt;
 
 	private final int capacity = 5;
@@ -78,6 +72,11 @@ public class RingBufferTest {
 			ringBufferInt.dequeue();
 			assertEquals(i == 1, ringBufferInt.isEmpty());
 		}
+	}
+
+	@Test
+	void createEmptyBuffer() {
+		assertThrows(IllegalArgumentException.class, () -> new RingBuffer<Integer>(0));
 	}
 
 	@Test
