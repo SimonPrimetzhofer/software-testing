@@ -96,6 +96,17 @@ public class RingBufferTest {
 
     @Test
     void testEnqueue() {
+        ringBufferInt.enqueue(1);
+        ringBufferInt.enqueue(2);
+        ringBufferInt.enqueue(3);
+        ringBufferInt.enqueue(4);
+        ringBufferInt.enqueue(5);
+        assertTrue(ringBufferInt.isFull());
+        assertEquals(1, ringBufferInt.peek());
+
+        ringBufferInt.enqueue(6);
+        assertTrue(ringBufferInt.isFull());
+        assertEquals(2, ringBufferInt.peek());
     }
 
     @Test
@@ -121,15 +132,15 @@ public class RingBufferTest {
 		// valid RingBuffer shall not throw exception when calling peek
 		assertDoesNotThrow(ringBufferInt::peek);
 
-		assertEquals(ringBufferInt.peek(), 1);
+		assertEquals(1, ringBufferInt.peek());
 
 		// ensure that peek does not remove first element
 		// by calling it a second time
-		assertEquals(ringBufferInt.peek(), 1);
+		assertEquals(1, ringBufferInt.peek());
 
 		// peek's value may only change when an element is dequeued
 		ringBufferInt.dequeue();
-		assertEquals(ringBufferInt.peek(), 2);
+		assertEquals(2, ringBufferInt.peek());
     }
 
     @Test
