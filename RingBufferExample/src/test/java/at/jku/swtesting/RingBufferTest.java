@@ -82,8 +82,16 @@ public class RingBufferTest {
     @Test
     void testIsFull() {
         assertFalse(ringBufferInt.isFull());
+		for (int i = 0; i < ringBufferInt.capacity(); i++) {
+			ringBufferInt.enqueue(i);
+		}
+		assertTrue(ringBufferInt.isFull());
 
+		ringBufferInt.enqueue(ringBufferInt.capacity() + 1);
+		assertTrue(ringBufferInt.isFull());
 
+		ringBufferInt.dequeue();
+		assertFalse(ringBufferInt.isFull());
     }
 
     @Test
