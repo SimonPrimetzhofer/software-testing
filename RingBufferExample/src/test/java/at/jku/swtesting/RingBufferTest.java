@@ -97,20 +97,65 @@ public class RingBufferTest {
     @Test
     void testEnqueue() {
         ringBufferInt.enqueue(1);
+        assertEquals(1, ringBufferInt.size());
+
         ringBufferInt.enqueue(2);
+        assertEquals(2, ringBufferInt.size());
+
         ringBufferInt.enqueue(3);
+        assertEquals(3, ringBufferInt.size());
+
         ringBufferInt.enqueue(4);
+        assertEquals(4, ringBufferInt.size());
+
         ringBufferInt.enqueue(5);
+        assertEquals(5, ringBufferInt.size());
+
+        // now, buffer should be full
         assertTrue(ringBufferInt.isFull());
+
+        // first element is still 1
         assertEquals(1, ringBufferInt.peek());
 
+        // add another element to full buffer
         ringBufferInt.enqueue(6);
+
+        // buffer is still full but an element has been overwritten
         assertTrue(ringBufferInt.isFull());
+
+        // new first element is 2 as 6 is the new last element
         assertEquals(2, ringBufferInt.peek());
     }
 
     @Test
     void testDequeue() {
+        // add initial elements
+        ringBufferInt.enqueue(1);
+        ringBufferInt.enqueue(2);
+        ringBufferInt.enqueue(3);
+        ringBufferInt.enqueue(4);
+        ringBufferInt.enqueue(5);
+
+        assertEquals(5, ringBufferInt.size());
+
+        // dequeue on buffer with elements shall not throw an exception
+        assertDoesNotThrow(ringBufferInt::dequeue);
+
+        // dequeue elements on by one and check size
+        assertEquals(2, ringBufferInt.dequeue());
+        assertEquals(3, ringBufferInt.size());
+
+        assertEquals(3, ringBufferInt.dequeue());
+        assertEquals(2, ringBufferInt.size());
+
+        assertEquals(4, ringBufferInt.dequeue());
+        assertEquals(1, ringBufferInt.size());
+
+        assertEquals(5, ringBufferInt.dequeue());
+        assertEquals(0, ringBufferInt.size());
+
+        // buffer should have size 0 after removing all elements
+        assertEquals(0, ringBufferInt.size());
     }
 
 	@Test
