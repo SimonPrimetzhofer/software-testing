@@ -102,6 +102,11 @@ public class RingBufferTest {
     void testDequeue() {
     }
 
+	@Test
+	void testEmptyDequeue() {
+		assertThrows(RuntimeException.class, () -> new RingBuffer<Integer>(1).dequeue());
+	}
+
     @Test
     void testEmptyPeek() {
         assertThrows(RuntimeException.class, () -> new RingBuffer<Integer>(1).peek());
