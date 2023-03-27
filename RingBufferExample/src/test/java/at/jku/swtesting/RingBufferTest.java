@@ -4,6 +4,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RingBufferTest {
@@ -190,5 +193,98 @@ public class RingBufferTest {
 
     @Test
     void testIterator() {
+        // Test with empty RingBuffer:
+        Iterator<Integer> iter = ringBufferInt.iterator();
+
+        // Iterator should not have any items
+        assertFalse(iter.hasNext());
+        assertThrows(NoSuchElementException.class, iter::next);
+
+        // Test with not full RingBuffer:
+        ringBufferInt.enqueue(1);
+        ringBufferInt.enqueue(2);
+        ringBufferInt.enqueue(3);
+
+        // Get the Iterator
+        iter = ringBufferInt.iterator();
+
+        // Iterate through Buffer
+        assertTrue(iter.hasNext());
+        assertEquals(1, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(2, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(3, iter.next());
+        // There should not be a next element because "3" is the last item
+        assertFalse(iter.hasNext());
+        assertThrows(NoSuchElementException.class, iter::next);
+
+        // Test with filled RingBuffer:
+        // fill the RingBuffer
+        ringBufferInt.enqueue(4);
+        ringBufferInt.enqueue(5);
+
+        // Get the Iterator
+        iter = ringBufferInt.iterator();
+
+        // Iterate through Buffer
+        assertTrue(iter.hasNext());
+        assertEquals(1, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(2, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(3, iter.next());
+
+        // Test remove(), expecting an Exception because it is not implemented:
+        assertThrows(UnsupportedOperationException.class, iter::remove);
+
+        assertTrue(iter.hasNext());
+        assertEquals(4, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(5, iter.next());
+        assertFalse(iter.hasNext());
+        assertThrows(NoSuchElementException.class, iter::next);
+
+        // Test Iterator with a Buffer after a Item is dequeued:
+        ringBufferInt.dequeue();
+
+        // Get the Iterator
+        iter = ringBufferInt.iterator();
+
+        // Iterate through Buffer
+        assertTrue(iter.hasNext());
+        assertEquals(2, iter.next());       // <- Bug: Iterator returns null except of 2
+                                                    // FIX: return array position first + index,
+    												// Additionally use % a.length to stay in bounds
+        assertTrue(iter.hasNext());
+        assertEquals(3, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(4, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(5, iter.next());
+        assertFalse(iter.hasNext());
+        assertThrows(NoSuchElementException.class, iter::next);
+
+        // Test iterator when last element is not end of array:
+        ringBufferInt.enqueue(6);
+        ringBufferInt.enqueue(7);
+        ringBufferInt.enqueue(8);
+
+        // Get Iterator
+        iter = ringBufferInt.iterator();
+
+        // Iterate through Buffer
+        assertTrue(iter.hasNext());
+        assertEquals(4, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(5, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(6, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(7, iter.next());
+        assertTrue(iter.hasNext());
+        assertEquals(8, iter.next());
+        assertFalse(iter.hasNext());
+        assertThrows(NoSuchElementException.class, iter::next);
     }
 }

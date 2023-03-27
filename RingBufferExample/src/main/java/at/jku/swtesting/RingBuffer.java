@@ -126,7 +126,8 @@ public class RingBuffer<Item> implements Iterable<Item> {
 		public Item next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
-			return a[i++];
+			// return a[i++];
+			return a[(first + i++) % a.length];
 		}
 	}
 
