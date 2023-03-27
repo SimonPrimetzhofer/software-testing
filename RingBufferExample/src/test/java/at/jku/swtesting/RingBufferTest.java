@@ -192,21 +192,24 @@ public class RingBufferTest {
     }
 
     @Test
-    void testIterator() {
+    void testEmptyIterator() {
         // Test with empty RingBuffer:
         Iterator<Integer> iter = ringBufferInt.iterator();
 
         // Iterator should not have any items
         assertFalse(iter.hasNext());
         assertThrows(NoSuchElementException.class, iter::next);
+    }
 
+    @Test
+    void testPartiallyFilledIterator() {
         // Test with not full RingBuffer:
         ringBufferInt.enqueue(1);
         ringBufferInt.enqueue(2);
         ringBufferInt.enqueue(3);
 
         // Get the Iterator
-        iter = ringBufferInt.iterator();
+        Iterator<Integer> iter = ringBufferInt.iterator();
 
         // Iterate through Buffer
         assertTrue(iter.hasNext());
@@ -218,14 +221,19 @@ public class RingBufferTest {
         // There should not be a next element because "3" is the last item
         assertFalse(iter.hasNext());
         assertThrows(NoSuchElementException.class, iter::next);
-
+    }
+    @Test
+    void testFilledIterator() {
         // Test with filled RingBuffer:
         // fill the RingBuffer
+        ringBufferInt.enqueue(1);
+        ringBufferInt.enqueue(2);
+        ringBufferInt.enqueue(3);
         ringBufferInt.enqueue(4);
         ringBufferInt.enqueue(5);
 
         // Get the Iterator
-        iter = ringBufferInt.iterator();
+        Iterator<Integer> iter = ringBufferInt.iterator();
 
         // Iterate through Buffer
         assertTrue(iter.hasNext());
@@ -235,27 +243,33 @@ public class RingBufferTest {
         assertTrue(iter.hasNext());
         assertEquals(3, iter.next());
 
-        // Test remove(), expecting an Exception because it is not implemented:
-        assertThrows(UnsupportedOperationException.class, iter::remove);
-
         assertTrue(iter.hasNext());
         assertEquals(4, iter.next());
         assertTrue(iter.hasNext());
         assertEquals(5, iter.next());
         assertFalse(iter.hasNext());
         assertThrows(NoSuchElementException.class, iter::next);
+    }
 
+    @Test
+    void testDequeuedIterator() {
+        // fill the RingBuffer
+        ringBufferInt.enqueue(1);
+        ringBufferInt.enqueue(2);
+        ringBufferInt.enqueue(3);
+        ringBufferInt.enqueue(4);
+        ringBufferInt.enqueue(5);
         // Test Iterator with a Buffer after a Item is dequeued:
         ringBufferInt.dequeue();
 
         // Get the Iterator
-        iter = ringBufferInt.iterator();
+        Iterator<Integer> iter = ringBufferInt.iterator();
 
         // Iterate through Buffer
         assertTrue(iter.hasNext());
         assertEquals(2, iter.next());       // <- Bug: Iterator returns null except of 2
-                                                    // FIX: return array position first + index,
-    												// Additionally use % a.length to stay in bounds
+        // FIX: return array position first + index,
+        // Additionally use % a.length to stay in bounds
         assertTrue(iter.hasNext());
         assertEquals(3, iter.next());
         assertTrue(iter.hasNext());
@@ -264,14 +278,27 @@ public class RingBufferTest {
         assertEquals(5, iter.next());
         assertFalse(iter.hasNext());
         assertThrows(NoSuchElementException.class, iter::next);
+    }
 
+    @Test
+    void testOverwrittenRingBuffer() {
         // Test iterator when last element is not end of array:
+        // fill the RingBuffer
+        ringBufferInt.enqueue(1);
+        ringBufferInt.enqueue(2);
+        ringBufferInt.enqueue(3);
+        ringBufferInt.enqueue(4);
+        ringBufferInt.enqueue(5);
+
+        ringBufferInt.dequeue();
+
         ringBufferInt.enqueue(6);
         ringBufferInt.enqueue(7);
         ringBufferInt.enqueue(8);
 
         // Get Iterator
-        iter = ringBufferInt.iterator();
+        Iterator<Integer> iter = ringBufferInt.iterator();
+
 
         // Iterate through Buffer
         assertTrue(iter.hasNext());
@@ -286,5 +313,14 @@ public class RingBufferTest {
         assertEquals(8, iter.next());
         assertFalse(iter.hasNext());
         assertThrows(NoSuchElementException.class, iter::next);
+    }
+
+    @Test
+    void testIteratorRemove() {
+        // Test with empty RingBuffer:
+        Iterator<Integer> iter = ringBufferInt.iterator();
+
+        // Test remove(), expecting an Exception because it is not implemented:
+        assertThrows(UnsupportedOperationException.class, iter::remove);
     }
 }
