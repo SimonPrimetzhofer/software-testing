@@ -16,7 +16,7 @@ public class RingBufferTest {
 
     @BeforeEach
     void setUp() {
-        ringBufferInt = new RingBuffer<>(capacity);
+        ringBufferInt = new RingBuffer<Integer>(capacity);
     }
 
     @AfterEach

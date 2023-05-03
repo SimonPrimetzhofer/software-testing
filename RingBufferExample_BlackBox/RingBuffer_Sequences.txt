@@ -1,0 +1,33 @@
+RingBuffer(0) - Exception
+
+RingBuffer(1) - empty - peek() - Exception
+RingBuffer(1) - empty - dequeue() - Exception
+RingBuffer(1) - empty - enqueue(a) - full
+RingBuffer(1) - empty - enqueue(a) - full - peek() - full
+RingBuffer(1) - empty - enqueue(a) - full - dequeue() - empty
+RingBuffer(1) - empty - enqueue(a) - full - dequeue() - empty - peek() - Exception
+RingBuffer(1) - empty - enqueue(a) - full - dequeue() - empty - dequeue() - Exception
+RingBuffer(1) - empty - enqueue(a) - full - enqueue(b) - full
+
+RingBuffer(3) - empty - peek() - Exception
+RingBuffer(3) - empty - dequeue() - Exception
+RingBuffer(3) - empty - enqueue(a) - filled
+RingBuffer(3) - empty - enqueue(a) - filled - peek() - filled
+RingBuffer(3) - empty - enqueue(a) - filled - dequeue() - empty
+RingBuffer(3) - empty - enqueue(a) - filled - dequeue() - empty - peek() - Exception
+RingBuffer(3) - empty - enqueue(a) - filled - dequeue() - empty - dequeue() - Exception
+
+RingBuffer(3) - empty - enqueue(a) - filled - enqueue(b) - filled
+RingBuffer(3) - empty - enqueue(a) - filled - enqueue(b) - filled - peek() - filled
+RingBuffer(3) - empty - enqueue(a) - filled - enqueue(b) - filled - dequeue() - filled
+RingBuffer(3) - empty - enqueue(a) - filled - enqueue(b) - filled - dequeue() - filled - peek() - filled()
+RingBuffer(3) - empty - enqueue(a) - filled - enqueue(b) - filled - dequeue() - filled - dequeue() - empty 
+RingBuffer(3) - empty - enqueue(a) - filled - enqueue(b) - filled - dequeue() - filled - dequeue() - empty - peek() - Exception
+RingBuffer(3) - empty - enqueue(a) - filled - enqueue(b) - filled - dequeue() - filled - dequeue() - empty - dequeue() - Exception
+
+RingBuffer(3) - empty - enqueue(a) - filled - enqueue(b) - filled - enqueue(c) - full
+RingBuffer(3) - empty - enqueue(a) - filled - enqueue(b) - filled - enqueue(c) - full - dequeue() - filled
+RingBuffer(3) - empty - enqueue(a) - filled - enqueue(b) - filled - enqueue(c) - full - dequeue() - filled - dequeue() - empty
+
+
+ 
