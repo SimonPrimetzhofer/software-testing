@@ -11,13 +11,16 @@ public class RingBufferModelWithAdapter implements FsmModel {
     protected int capacity;
     protected int size; // corresponds to N in RingBuffer.java
 
-    // TODO think of a way to verify the inserted data, "test # size" does not work as the buffer can overflow, thus maybe something with first or last or so?
-    // maybe a second variable of actual added stuff, size2
+    private int counter;
 
-    private RingBuffer<String> ringBuffer = new RingBuffer<>(capacity);
+    // TODO Make use of the model’s state variable (counter) to assert the correct response; use JUnit asserts
+    // attempts using counter or size have failed so far
+
+    private RingBuffer<String> ringBuffer;
 
     public RingBufferModelWithAdapter(int capacity) {
         this.capacity = capacity;
+        ringBuffer = new RingBuffer<>(capacity);
     }
 
     public Object getState() {
@@ -31,7 +34,8 @@ public class RingBufferModelWithAdapter implements FsmModel {
     }
 
     public void reset(boolean testing) {
-        size = 0;
+        size = 0; counter = capacity;
+        ringBuffer = new RingBuffer<>(capacity);
     }
 
     public boolean enqueueGuard() {
@@ -43,6 +47,7 @@ public class RingBufferModelWithAdapter implements FsmModel {
         ringBuffer.enqueue("test #" + size);
         if (capacity > size)
             size++;
+        counter--;
     }
 
     public boolean dequeueGuard() {
@@ -52,8 +57,8 @@ public class RingBufferModelWithAdapter implements FsmModel {
     @Action
     public void dequeue() {
         String data = ringBuffer.dequeue();
-        size--;
-        assertEquals("test #" + size, data);
+        size--; counter++;
+        assertEquals("test #" + counter, data);
     }
 
     public boolean peekGuard() {
@@ -63,7 +68,19 @@ public class RingBufferModelWithAdapter implements FsmModel {
     @Action
     public void peek() {
         String data = ringBuffer.peek();
-        assertEquals("test #" + size, data);
+        assertEquals("test #" + counter, data);
+    }
+
+    @Action
+    public void size() {
+        int data = ringBuffer.size();
+        assertEquals(size, data);
+    }
+
+    @Action
+    public void isEmpty() {
+        boolean empty = ringBuffer.isEmpty();
+        assertEquals(size == 0, empty);
     }
 
     public boolean dequeueFromEmptyBufferGuard() {
@@ -73,9 +90,7 @@ public class RingBufferModelWithAdapter implements FsmModel {
     @Action
     public void dequeueFromEmptyBuffer() {
         //throw new RuntimeException("Empty ring buffer.");
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            ringBuffer.dequeue();
-        });
+        RuntimeException thrown = assertThrows(RuntimeException.class, ringBuffer::dequeue);
         assertEquals("Empty ring buffer.", thrown.getMessage());
     }
 
@@ -86,9 +101,7 @@ public class RingBufferModelWithAdapter implements FsmModel {
     @Action
     public void initialCapacityLessThanOne() {
         //throw new RuntimeException("Initial capacity is less than one.");
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            ringBuffer.dequeue();
-        });
+        RuntimeException thrown = assertThrows(RuntimeException.class, ringBuffer::dequeue);
         assertEquals("Initial capacity is less than one.", thrown.getMessage());
     }
 }
