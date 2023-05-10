@@ -11,6 +11,12 @@ public class RingBufferModelWithAdapter implements FsmModel {
     protected int capacity;
     protected int size; // corresponds to N in RingBuffer.java, the 'counter'
 
+    // as it does not work with the counter/size variable to check for correct data in the ring buffer as it can overflow
+    // we introduced a first and last variable
+    protected int first = 0;
+    protected int last = 0;
+
+
     private RingBuffer<String> ringBuffer;
 
     public RingBufferModelWithAdapter(int capacity) {
@@ -21,15 +27,19 @@ public class RingBufferModelWithAdapter implements FsmModel {
     public Object getState() {
         if (size == 0) {
             return "EMPTY";
-        } else if (size == capacity) {
+        }
+        else if (size == capacity) {
             return "FULL";
-        } else if ((size > 0) && (size < capacity)) {
+        }
+        else if ((size > 0) && (size < capacity)) {
             return "FILLED";
-        } else return "ERROR_UNEXPECTED_MODEL_STATE";
+        }
+        else return "ERROR_UNEXPECTED_MODEL_STATE";
     }
 
     public void reset(boolean testing) {
         size = 0;
+        last = first = 0;
         ringBuffer = new RingBuffer<>(capacity);
     }
 
@@ -40,9 +50,15 @@ public class RingBufferModelWithAdapter implements FsmModel {
     @Action
     public void enqueue() {
         assertEquals(ringBuffer.size(), size);
-        ringBuffer.enqueue("test #" + size);
+
+        ringBuffer.enqueue("test #" + last);
+
+        last++;
+        if (last - capacity > first)
+            first = last - capacity + 1;
         if (capacity > size)
             size++;
+
         assertEquals(ringBuffer.size(), size);
     }
 
@@ -54,9 +70,9 @@ public class RingBufferModelWithAdapter implements FsmModel {
     public void dequeue() {
         assertEquals(ringBuffer.size(), size);
         String data = ringBuffer.dequeue();
-        size--;
+        size--; first++;
         assertEquals(ringBuffer.size(), size);
-//        assertEquals("test #" + counter, data);
+        assertEquals("test #" + (first - 1), data);
     }
 
     public boolean peekGuard() {
@@ -68,7 +84,7 @@ public class RingBufferModelWithAdapter implements FsmModel {
         assertEquals(ringBuffer.size(), size);
         String data = ringBuffer.peek();
         assertEquals(ringBuffer.size(), size);
-//        assertEquals("test #" + counter, data);
+        assertEquals("test #" + (first), data);
     }
 
     @Action

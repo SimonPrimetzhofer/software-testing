@@ -52,4 +52,4 @@ state coverage: 3/3
 transition coverage: 14/14
 
 Having a capacity of 2 instead of 3 results in more states (the actual 3 states we have declared) and more transitions. Thus, we also need more generated tests to cover all of it.
-So '130' is enough but '100' is not.
+So '130' is enough but '100' is not. Somehow having a capacity of 2 results in 2/2 states but when you increase the test cases to 130 we also have 3/3 states again.
