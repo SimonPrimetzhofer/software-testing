@@ -1,0 +1,55 @@
+Capacity = 3
+
+tester.generate(20)
+action coverage: 6/7
+state coverage: 2/2
+transition coverage: 8/10
+
+tester.generate(30)
+action coverage: 6/7
+state coverage: 2/2
+transition coverage: 10/10
+
+tester.generate(40)
+action coverage: 6/7
+state coverage: 2/2
+transition coverage: 10/10
+
+tester.generate(100)
+action coverage: 6/7
+state coverage: 2/2
+transition coverage: 10/10
+
+Action coverage of 6 out of 7 can only be achieved as the 7th action is initialCapacityLessThanOne() which is an exception thrown, when capacity is less than 1
+and thus not executed with our hard coded capacity of 3.
+To cover all other actions and states '30' generated tests are enough.
+
+Capacity = 2
+
+tester.generate(20)
+action coverage: 6/7
+state coverage: 3/3
+transition coverage: 9/14
+
+tester.generate(30)
+action coverage: 6/7
+state coverage: 3/3
+transition coverage: 11/14
+
+tester.generate(50)
+action coverage: 6/7
+state coverage: 3/3
+transition coverage: 13/14
+
+tester.generate(100)
+action coverage: 6/7
+state coverage: 3/3
+transition coverage: 13/14
+
+tester.generate(130)
+action coverage: 6/7
+state coverage: 3/3
+transition coverage: 14/14
+
+Having a capacity of 2 instead of 3 results in more states (the actual 3 states we have declared) and more transitions. Thus, we also need more generated tests to cover all of it.
+So '130' is enough but '100' is not.

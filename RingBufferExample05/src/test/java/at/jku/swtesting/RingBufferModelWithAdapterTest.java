@@ -13,7 +13,7 @@ public class RingBufferModelWithAdapterTest {
 
     @Test
     void randomTestWithModel() {
-        Tester tester = new RandomTester(new RingBufferModelWithAdapter(3));
+        Tester tester = new RandomTester(new RingBufferModelWithAdapter(2));
 
         tester.buildGraph();
         tester.addListener(new VerboseListener());
@@ -22,7 +22,7 @@ public class RingBufferModelWithAdapterTest {
         tester.addCoverageMetric(new StateCoverage());
         tester.addCoverageMetric(new TransitionCoverage());
 
-        tester.generate(100);
+        tester.generate(130);
 
         tester.printCoverage();
     }
