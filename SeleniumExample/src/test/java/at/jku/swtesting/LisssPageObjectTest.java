@@ -1,12 +1,13 @@
 package at.jku.swtesting;
 
-import at.jku.swtesting.pageobjects.google.ResultsPage;
-import at.jku.swtesting.pageobjects.google.SearchPage;
+import at.jku.swtesting.pageobjects.lisss.ResultsPage;
+import at.jku.swtesting.pageobjects.lisss.SimpleSearchPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -21,11 +22,12 @@ public class LisssPageObjectTest {
 
 	@BeforeAll
 	public static void setUp() { 
-		WebDriverManager.getInstance(DRIVER_TYPE).setup(); 
+		WebDriverManager.getInstance(DRIVER_TYPE).setup();
 		driver = new ChromeDriver();
 		// driver = new FirefoxDriver();
 		
-		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
+		driver.manage().window().setSize(new Dimension(1100, 900));
 	}
 
     @AfterAll
@@ -36,13 +38,30 @@ public class LisssPageObjectTest {
 
 	@Test
 	public void testSearch() {
-		driver.get("https://www.google.at/");
-		SearchPage searchPage = new SearchPage(driver);
-		searchPage.confirmTerms();
+		driver.get("https://lisss.jku.at/primo-explore/search?vid=ULI&lang=en_US");
+		SimpleSearchPage searchPage = new SimpleSearchPage(driver);
 
-			ResultsPage resultsPage = searchPage.searchFor("testing");
+		ResultsPage resultsPage = searchPage.searchFor("software testing");
 				
-		assertEquals("testing - Google Suche", resultsPage.getTitle());
+		assertEquals("JKU | LISSS - software testing", resultsPage.getTitle());
+
+		assertEquals(4253, resultsPage.getNumberOfResults());
+	}
+
+	@Test
+	public void testAdditionalSearch() {
+		driver.get("https://lisss.jku.at/primo-explore/search?vid=ULI&lang=en_US");
+		SimpleSearchPage searchPage = new SimpleSearchPage(driver);
+
+		ResultsPage resultsPage = searchPage.searchFor("software testing");
+
+		assertEquals("JKU | LISSS - software testing", resultsPage.getTitle());
+
+		assertEquals(4253, resultsPage.getNumberOfResults());
+
+		assertEquals(1, resultsPage.getPageNumber());
+
+		assertEquals("software testing", resultsPage.getSearchBarContent());
 	}
 
 
