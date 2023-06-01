@@ -2,21 +2,19 @@ package at.jku.swtesting;
 
 import at.jku.swtesting.pageobjects.google.ResultsPage;
 import at.jku.swtesting.pageobjects.google.SearchPage;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.AfterAll;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-//import org.openqa.selenium.firefox.FirefoxDriver;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.concurrent.TimeUnit;
 
-public class GoogleSearchPageObjectTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class LisssPageObjectTest {
 
 	private static WebDriver driver;
 	private static final DriverManagerType DRIVER_TYPE = DriverManagerType.CHROME;

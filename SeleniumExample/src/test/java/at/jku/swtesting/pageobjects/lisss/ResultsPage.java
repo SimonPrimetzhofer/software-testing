@@ -1,4 +1,4 @@
-package at.jku.swtesting.pageobjects;
+package at.jku.swtesting.pageobjects.lisss;
 
 import org.openqa.selenium.WebDriver;
 
