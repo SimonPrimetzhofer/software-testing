@@ -29,10 +29,16 @@ public class RingBufferTest {
         assertEquals(capacity, ringBufferInt.capacity());
 
         // filling buffer while checking capacity
-        for (int i = 0; i < capacity + 2; i++) {
+        for (int i = 0; i < capacity; i++) {
             ringBufferInt.enqueue(i);
             assertEquals(capacity, ringBufferInt.capacity());
         }
+
+        // overflow the buffer
+        ringBufferInt.enqueue(5);
+        assertEquals(capacity, ringBufferInt.capacity());
+        ringBufferInt.enqueue(6);
+        assertEquals(capacity, ringBufferInt.capacity());
 
         // dequeuing buffer while checking capacity
         for (int i = capacity; i > 0; i--) {
@@ -47,10 +53,14 @@ public class RingBufferTest {
         assertEquals(0, ringBufferInt.size());
 
         // filling buffer while checking size
-        for (int i = 0; i < capacity + 2; i++) {
+        for (int i = 0; i < capacity; i++) {
             ringBufferInt.enqueue(i);
-            assertEquals(i < capacity ? i + 1 : capacity, ringBufferInt.size());
+            assertEquals(i + 1, ringBufferInt.size());
         }
+
+        // overflow the buffer
+        ringBufferInt.enqueue(5);
+        ringBufferInt.enqueue(6);
 
         // dequeuing buffer while checking size
         for (int i = capacity; i > 0; i--) {
@@ -65,10 +75,16 @@ public class RingBufferTest {
         assertTrue(ringBufferInt.isEmpty());
 
         // filling buffer while checking isEmpty
-        for (int i = 0; i < capacity + 2; i++) {
+        for (int i = 0; i < capacity; i++) {
             ringBufferInt.enqueue(i);
             assertFalse(ringBufferInt.isEmpty());
         }
+
+        // overflow the buffer
+        ringBufferInt.enqueue(5);
+        assertFalse(ringBufferInt.isEmpty());
+        ringBufferInt.enqueue(6);
+        assertFalse(ringBufferInt.isEmpty());
 
         // dequeuing buffer while checking isEmpty
         for (int i = capacity; i > 0; i--) {
@@ -85,7 +101,7 @@ public class RingBufferTest {
     @Test
     void testIsFull() {
         assertFalse(ringBufferInt.isFull());
-		for (int i = 0; i < ringBufferInt.capacity(); i++) {
+		for (int i = 0; i < capacity; i++) {
 			ringBufferInt.enqueue(i);
 		}
 		assertTrue(ringBufferInt.isFull());
